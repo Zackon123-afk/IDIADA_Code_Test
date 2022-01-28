@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,7 +22,7 @@ public class Main {
 	static Scanner keyboard = new Scanner(System.in);
 	static int sizeX;
 	static int sizeY;
-	static List<Robot> robotsPositions;
+	static List<Robot> robotsPositions = new ArrayList<Robot>();
 	
 	public static void main(String[] args) {
 		
@@ -134,7 +135,8 @@ public class Main {
 			}
 			
 			n_robots++;
-			
+			System.out.println("Press Enter to send another robot, otherwise, press 'q'");
+			keyboardResponse = keyboard.nextLine();
 			
 		}
 		
@@ -147,7 +149,7 @@ public class Main {
 	public static Robot action(Robot robotToMove, String mov) {
 		
 		if (mov.equals("M")) {
-			robotToMove.setCoordinates(movement(robotToMove.getCoordinates(),mov));
+			robotToMove.setCoordinates(movement(robotToMove.getCoordinates(),robotToMove.getOrientation()));
 		} else {
 			robotToMove.setOrientation(rotate(robotToMove.getOrientation(),mov));
 		}
