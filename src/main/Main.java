@@ -1,5 +1,6 @@
 package main;
 
+import java.util.List;
 import java.util.Scanner;
 
 import classes.*;
@@ -20,13 +21,13 @@ public class Main {
 	static Scanner keyboard = new Scanner(System.in);
 	static int sizeX;
 	static int sizeY;
-	static Robot[] robotsPositions;
+	static List<Robot> robotsPositions;
 	
 	public static void main(String[] args) {
 		
 		String keyboardResponse;
 		String[] checkStr;
-		String[] movements;
+		String[] actions;
 		int n_robots=0;
 		int valueCheck;
 		System.out.print("Size of the tableau: ");
@@ -102,14 +103,37 @@ public class Main {
 				valueCheck = checkCorrectValuesMovement(checkStr);
 			}
 			
-			movements = checkStr;
+			actions = checkStr;
 			int i =0;
+			
 			//Check the movement while doing it
-			while (i < checkStr.length){
-				
-				
-
+			while (i < actions.length){
+				initialRobot = action(initialRobot,actions[i]);
+				if (actions[i].equals("M")) {
+					valueCheck = checkAction(initialRobot.getCoordinates());
+				}
+				if (valueCheck == NO_ERR) {
+					i++;
+				}else {
+					break;
+				}
 			}
+			
+			switch(valueCheck) {
+				case NO_ERR:
+					System.out.println("Final position of robot nº"+(n_robots+1)+": "+initialRobot.toString());
+					robotsPositions.add(initialRobot);
+					break;
+					
+				case ERR_COLISION:
+					System.out.println("Robot nº"+(n_robots+1)+" has crashed with robot in position "+initialRobot.getCoordinates().toString()+ "!");
+					break;
+					
+				case ERR_BOUNDS:
+					System.out.println("Robot nº"+(n_robots+1)+" has gone out of the plateau in position"+initialRobot.getCoordinates().toString()+"!");
+			}
+			
+			n_robots++;
 			
 			
 		}
@@ -120,7 +144,7 @@ public class Main {
 		for(int i=0; i<20; i++) System.out.println();
 	}
 	
-	public static Robot movement(Robot robotToMove, String mov) {
+	public static Robot action(Robot robotToMove, String mov) {
 		
 		if (mov.equals("M")) {
 			robotToMove.setCoordinates(movement(robotToMove.getCoordinates(),mov));
@@ -182,7 +206,6 @@ public class Main {
 		}
 	}
 
-	
 	public static int checkingSizeTableau(String[] checkStr) {
 		
 		if (checkStr.length != 2) {
@@ -249,9 +272,15 @@ public class Main {
 		
 	}
 	
-	private static int checkMovement(String[] checkStr) {
+	private static int checkAction(Point checkPt) {
 		
-		 
+		if (checkBounds(checkPt) != NO_ERR) {
+			return ERR_BOUNDS;
+		}
+		
+		if (checkColision(checkPt) != NO_ERR) {
+			return ERR_COLISION;
+		}
 		
 		return NO_ERR;
 		
@@ -272,21 +301,21 @@ public class Main {
 		return NO_ERR;
 	}
 	
-	private static int checkBounds(Point checkStr) {
-		if (checkStr.getX() > sizeX || checkStr.getY() > sizeY ) {
+	private static int checkBounds(Point checkPt) {
+		if (checkPt.getX() > sizeX || checkPt.getY() > sizeY ) {
 			return ERR_BOUNDS;
 		}
 		
 		return NO_ERR;
 	}
 	
-	private static int checkColision(Point checkPtr) {
+	private static int checkColision(Point checkPt) {
 		
 		int i =0;
 		
-		while (i < robotsPositions.length) {
-			if (robotsPositions[i].getCoordinates().getX() == checkPtr.getX() && 
-					robotsPositions[i].getCoordinates().getY() == checkPtr.getY()) {
+		while (i < robotsPositions.size()) {
+			if (robotsPositions.get(i).getCoordinates().getX() == checkPt.getX() && 
+					robotsPositions.get(i).getCoordinates().getY() == checkPt.getY()) {
 				return ERR_COLISION;
 			}else {
 				i++;

@@ -14,10 +14,6 @@ public class Robot {
 		return coordinates;
 	}
 	
-	public void setCoordinates(int x, int y) {
-		coordinates.SetPoint(x, y);
-	}
-	
 	public void setCoordinates(Point point) {
 		coordinates = point;
 	}
@@ -28,6 +24,14 @@ public class Robot {
 
 	public void setOrientation(String orientation) {
 		this.orientation = orientation;
+	}
+	
+	public String toString() {
+		return coordinates.getX()+","+coordinates.getY()+","+orientation;
+	}
+	
+	public Robot clone() {
+		return new Robot(coordinates.getX(),coordinates.getY(),orientation);
 	}
 	
 }
