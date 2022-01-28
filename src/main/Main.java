@@ -12,12 +12,18 @@ import classes.*;
 
 public class Main {
 	
+	//Error constants
 	static final int NO_ERR = 0;
 	static final int ERR_FORMAT = 1;
 	static final int ERR_SINTAXIS = 2;
 	static final int ERR_COLISION = 3;
 	static final int ERR_BOUNDS = 4;
 	static final int ERR_NULL = 5;
+	
+	//Menu constant
+	static final int SIZE_MENU = 6;
+	static final int INIT_POS_MENU = 7;
+	static final int MOVEMENT_MENU = 8;
 	
 	static Scanner keyboard = new Scanner(System.in);
 	static int sizeX;
@@ -31,7 +37,8 @@ public class Main {
 		String[] actions;
 		int n_robots=0;
 		int valueCheck;
-		System.out.print("Size of the tableau: ");
+		cleanScreen();
+		showMenu(0,0,n_robots,null,SIZE_MENU);
 		keyboardResponse = keyboard.nextLine();
 		checkStr = keyboardResponse.split("\\s+");
 		valueCheck = checkingSizeTableau(checkStr);
@@ -40,7 +47,7 @@ public class Main {
 		while (valueCheck != NO_ERR) {
 			cleanScreen();
 			System.out.println("Please put correct values (number of x size, number of y size)");
-			System.out.print("Size of the tableau: ");
+			showMenu(0,0,n_robots,null,SIZE_MENU);
 			keyboardResponse = keyboard.nextLine();
 			checkStr = keyboardResponse.split("\\s+");
 			valueCheck = checkingSizeTableau(checkStr);
@@ -50,13 +57,12 @@ public class Main {
 		sizeY = Integer.parseInt(checkStr[1]);
 		
 		//Starting the loop of robots
-		while(keyboardResponse != "q") {
+		while(! keyboardResponse.equals("q")) {
 
 			Robot initialRobot;
 			
 			cleanScreen();
-			System.out.println("Size of tableau: ("+sizeX+","+sizeY+")");
-			System.out.print("Initial position of the robot nº"+(n_robots+1)+":");
+			showMenu(sizeX,sizeY,n_robots,null,INIT_POS_MENU);
 			keyboardResponse = keyboard.nextLine();
 			checkStr = keyboardResponse.split("\\s+");
 			valueCheck = checkInitialPos(checkStr);
@@ -64,7 +70,6 @@ public class Main {
 			//Checking the correct values of the initial position of the robot
 			while(valueCheck != NO_ERR) {
 				cleanScreen();
-				System.out.println("Size of tableau: ("+sizeX+","+sizeY+")");
 				switch(valueCheck) {
 					case ERR_SINTAXIS:
 						System.out.println("Please put the correct format: positon X ,position Y, orientation(N,E,W,S) ");
@@ -76,6 +81,8 @@ public class Main {
 						System.out.println("Please put the coordenates in a position that there is no robot there");
 						break;
 				}
+				System.out.println();
+				showMenu(sizeX,sizeY,n_robots,null,INIT_POS_MENU);
 				keyboardResponse = keyboard.nextLine();
 				checkStr = keyboardResponse.split("\\s+");
 				valueCheck = checkInitialPos(checkStr);
@@ -84,10 +91,7 @@ public class Main {
 			initialRobot = new Robot(Integer.parseInt(checkStr[0]),Integer.parseInt(checkStr[1]),checkStr[2]);
 			
 			cleanScreen();
-			System.out.println("Size of tableau: ("+sizeX+","+sizeY+")");
-			System.out.println("Initial position of the robot nº"+(n_robots+1)+":"+initialRobot.getCoordinates().getX()+" "+
-					initialRobot.getCoordinates().getY()+" "+initialRobot.getOrientation());
-			System.out.print("Movement is going to do the robot:");
+			showMenu(sizeX,sizeY,n_robots,initialRobot,MOVEMENT_MENU);
 			keyboardResponse = keyboard.nextLine();
 			checkStr = keyboardResponse.split("");
 			valueCheck = checkCorrectValuesMovement(checkStr);
@@ -95,10 +99,9 @@ public class Main {
 			//Check the correct format of values
 			while (valueCheck != NO_ERR){
 				cleanScreen();
-				System.out.println("Size of tableau: ("+sizeX+","+sizeY+")");
-				System.out.println("Initial position of the robot nº"+(n_robots+1)+":"+initialRobot.getCoordinates().getX()+" "+
-						initialRobot.getCoordinates().getY()+" "+initialRobot.getOrientation());
 				System.out.println("Please put the correct format values (R=right,L=left,M=Movement)");
+				System.out.println();
+				showMenu(sizeX,sizeY,n_robots,initialRobot,MOVEMENT_MENU);
 				keyboardResponse = keyboard.nextLine();
 				checkStr = keyboardResponse.split("");
 				valueCheck = checkCorrectValuesMovement(checkStr);
@@ -120,6 +123,7 @@ public class Main {
 				}
 			}
 			
+			//Check the end of the robot
 			switch(valueCheck) {
 				case NO_ERR:
 					System.out.println("Final position of robot nº"+(n_robots+1)+": "+initialRobot.toString());
@@ -135,13 +139,32 @@ public class Main {
 			}
 			
 			n_robots++;
-			System.out.println("Press Enter to send another robot, otherwise, press 'q'");
+			System.out.println("Press Enter to send another robot, otherwise, press 'q' and Enter");
 			keyboardResponse = keyboard.nextLine();
 			
 		}
 		
 	}
 
+	
+	public static void showMenu(int sizeX, int sizeY,int n_robots ,Robot initialRobot, int typeOfMenu) {
+		switch(typeOfMenu) {
+			case SIZE_MENU:
+				System.out.print("Size of the tableau: ");
+				break;
+			case INIT_POS_MENU:
+				System.out.println("Size of the tableau: ("+sizeX+","+sizeY+")");
+				System.out.print("Initial position of the robot nº"+(n_robots+1)+": ");
+				break;
+			case MOVEMENT_MENU:
+				System.out.println("Size of the tableau: ("+sizeX+","+sizeY+")");
+				System.out.println("Initial position of the robot nº"+(n_robots+1)+": "+initialRobot.getCoordinates().getX()+" "+
+						initialRobot.getCoordinates().getY()+" "+initialRobot.getOrientation());
+				System.out.print("Movement is going to do the robot: ");
+				break;
+		}
+	}
+	
 	public static void cleanScreen() {
 		for(int i=0; i<20; i++) System.out.println();
 	}
