@@ -146,11 +146,11 @@ public class Main {
 					break;
 					
 				case ERR_COLISION:
-					System.out.println("Robot nº"+(n_robots+1)+" has crashed with robot in position "+initialRobot.getCoordinates().toString()+ "!");
+					System.out.println("Robot n"+(n_robots+1)+" has crashed with robot in position "+initialRobot.getCoordinates().toString()+ "!");
 					break;
 					
 				case ERR_BOUNDS:
-					System.out.println("Robot nº"+(n_robots+1)+" has gone out of the plateau in position "+initialRobot.getCoordinates().toString()+"!");
+					System.out.println("Robot n"+(n_robots+1)+" has gone out of the plateau in position "+initialRobot.getCoordinates().toString()+"!");
 			}
 			
 			n_robots++;
