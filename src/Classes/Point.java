@@ -12,7 +12,7 @@ public class Point {
 	int x;
 	int y;
 	/**
-	 * Constructor: Create 
+	 * Constructor: Create a new instance Point
 	 * @param x: X value
 	 * @param y: Y value 
 	 */

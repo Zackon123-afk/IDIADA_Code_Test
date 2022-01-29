@@ -9,7 +9,11 @@ import classes.*;
 
 
 
-
+/**
+ * {@summary Main executor of the problem}
+ * @author Arnau Francesc Llaberia Declara
+ * @version 1.0
+ */
 public class Main {
 	
 	//Error constants
@@ -29,7 +33,10 @@ public class Main {
 	static int sizeX;
 	static int sizeY;
 	static List<Robot> robotsPositions = new ArrayList<Robot>();
-	
+	/**
+	 * Main of the code
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		
 		String keyboardResponse;

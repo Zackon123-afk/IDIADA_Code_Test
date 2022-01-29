@@ -11,7 +11,12 @@ public class Robot {
 	 */
 	private Point coordinates;
 	private String orientation;
-	
+	/**
+	 * Create a new instance Robot
+	 * @param x: X position
+	 * @param y: Y position
+	 * @param orientation: cardinal position of the robot
+	 */
 	public Robot(int x, int y, String orientation) {
 		coordinates = new Point(x,y);
 		this.orientation = orientation;
