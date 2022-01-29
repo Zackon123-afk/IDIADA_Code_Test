@@ -1,7 +1,14 @@
 package classes;
-
+/**
+ * {@summary Class for saving the information of the robot}
+ * @author Arnau Francesc Llaberia Declara
+ * @version 1.0
+ */
 public class Robot {
-	
+	/**
+	 * coordinates: Point where is located the Robot
+	 * orientation: in which of the 4 cardinal positions is the robot watching
+	 */
 	private Point coordinates;
 	private String orientation;
 	
@@ -25,11 +32,15 @@ public class Robot {
 	public void setOrientation(String orientation) {
 		this.orientation = orientation;
 	}
-	
+	/**
+	 * toString: Returns an information string about the object
+	 */
 	public String toString() {
-		return coordinates.getX()+","+coordinates.getY()+","+orientation;
+		return coordinates.toString()+","+orientation;
 	}
-	
+	/**
+	 * clone: Returns a new Robot with the same attributes as this one
+	 */
 	public Robot clone() {
 		return new Robot(coordinates.getX(),coordinates.getY(),orientation);
 	}

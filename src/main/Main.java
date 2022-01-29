@@ -46,7 +46,15 @@ public class Main {
 		//Checking correct values of plateau
 		while (valueCheck != NO_ERR) {
 			cleanScreen();
-			System.out.println("Please put correct values (number of x size, number of y size)");
+			switch(valueCheck) {
+				case ERR_SINTAXIS:
+					System.out.println("Please put correct values (number of x size, number of y size)");
+					break;
+				case ERR_BOUNDS:
+					System.out.println("Please put a valid size of the plateau");
+					break;
+			}
+			System.out.println();
 			showMenu(0,0,n_robots,null,SIZE_MENU);
 			keyboardResponse = keyboard.nextLine();
 			checkStr = keyboardResponse.split("\\s+");
@@ -112,7 +120,7 @@ public class Main {
 			
 			//Check the movement while doing it
 			while (i < actions.length){
-				initialRobot = action(initialRobot,actions[i]);
+				action(initialRobot,actions[i]);
 				if (actions[i].equals("M")) {
 					valueCheck = checkAction(initialRobot.getCoordinates());
 				}
@@ -123,10 +131,10 @@ public class Main {
 				}
 			}
 			
-			//Check the end of the robot
+			//Check the end of the robot's movement
 			switch(valueCheck) {
 				case NO_ERR:
-					System.out.println("Final position of robot nº"+(n_robots+1)+": "+initialRobot.toString());
+					System.out.println("Final position of robot n"+(n_robots+1)+": "+initialRobot.toString());
 					robotsPositions.add(initialRobot);
 					break;
 					
@@ -135,7 +143,7 @@ public class Main {
 					break;
 					
 				case ERR_BOUNDS:
-					System.out.println("Robot nº"+(n_robots+1)+" has gone out of the plateau in position"+initialRobot.getCoordinates().toString()+"!");
+					System.out.println("Robot nº"+(n_robots+1)+" has gone out of the plateau in position "+initialRobot.getCoordinates().toString()+"!");
 			}
 			
 			n_robots++;
@@ -146,7 +154,14 @@ public class Main {
 		
 	}
 
-	
+	/**
+	 * Function to show the menu depending on the information we have to provide
+	 * @param sizeX: X size of the tableau
+	 * @param sizeY: Y size of the tableau
+	 * @param n_robots: number of robots in the plateau
+	 * @param initialRobot: robot of the actual loop
+	 * @param typeOfMenu: type of the menu is it going to show
+	 */
 	public static void showMenu(int sizeX, int sizeY,int n_robots ,Robot initialRobot, int typeOfMenu) {
 		switch(typeOfMenu) {
 			case SIZE_MENU:
@@ -154,33 +169,42 @@ public class Main {
 				break;
 			case INIT_POS_MENU:
 				System.out.println("Size of the tableau: ("+sizeX+","+sizeY+")");
-				System.out.print("Initial position of the robot nº"+(n_robots+1)+": ");
+				System.out.print("Initial position of the robot n"+(n_robots+1)+": ");
 				break;
 			case MOVEMENT_MENU:
 				System.out.println("Size of the tableau: ("+sizeX+","+sizeY+")");
-				System.out.println("Initial position of the robot nº"+(n_robots+1)+": "+initialRobot.getCoordinates().getX()+" "+
+				System.out.println("Initial position of the robot n"+(n_robots+1)+": "+initialRobot.getCoordinates().getX()+" "+
 						initialRobot.getCoordinates().getY()+" "+initialRobot.getOrientation());
 				System.out.print("Movement is going to do the robot: ");
 				break;
 		}
 	}
-	
+	/**
+	 * Function to clean the screen
+	 */
 	public static void cleanScreen() {
 		for(int i=0; i<20; i++) System.out.println();
 	}
-	
-	public static Robot action(Robot robotToMove, String mov) {
+	/**
+	 * Function to do the action of the robot
+	 * @param robotToMove: Robot is going to do the action
+	 * @param mov: Action is going to do, M = Movement, R/L= Rotation
+	 */
+	public static void action(Robot robotToMove, String mov) {
 		
 		if (mov.equals("M")) {
-			robotToMove.setCoordinates(movement(robotToMove.getCoordinates(),robotToMove.getOrientation()));
+			movement(robotToMove.getCoordinates(),robotToMove.getOrientation());
 		} else {
 			robotToMove.setOrientation(rotate(robotToMove.getOrientation(),mov));
 		}
 		
-		return robotToMove;
 	}
-	
-	public static Point movement(Point actualPoint, String ori) {
+	/**
+	 * Function to do the action 'movement' of the robot
+	 * @param actualPoint: Actual point of the robot
+	 * @param ori: Orientation of the robot
+	 */
+	public static void movement(Point actualPoint, String ori) {
 		switch(ori) {
 			case "N":
 				actualPoint.setY(actualPoint.getY()+1);
@@ -194,9 +218,13 @@ public class Main {
 			case "S":
 				actualPoint.setY(actualPoint.getY()-1);
 		}
-		return actualPoint;
 	}
-	
+	/**
+	 * Function to rotate the orientation of the robot
+	 * @param actualOri: Actual orientation of the robot
+	 * @param rotation: Direction which has the robot to rotate
+	 * @return New orientation of the robot
+	 */
 	public static String rotate(String actualOri, String rotation) {
 		switch(actualOri) {
 			case "N":
@@ -230,7 +258,11 @@ public class Main {
 				return actualOri;
 		}
 	}
-
+	/**
+	 * Function to check if the user has choose a correct format size of the tableau
+	 * @param checkStr: String of the values to check
+	 * @return NO_ERR: No error / ERR_SINTAXIS: Error writing the format of the tableau / ERR_BOUNS: Can not exist a tableau with negative or 0 size
+	 */
 	public static int checkingSizeTableau(String[] checkStr) {
 		
 		if (checkStr.length != 2) {
@@ -240,10 +272,18 @@ public class Main {
 		if (checkNumeric(checkStr[0]) != NO_ERR || checkNumeric(checkStr[1]) != NO_ERR) {
 			return ERR_SINTAXIS;
 		}
+		
+		if (Integer.parseInt(checkStr[0]) <=0 || Integer.parseInt(checkStr[1]) <=0) {
+			return ERR_BOUNDS;
+		}
 
 		return NO_ERR;
 	}
-	
+	/**
+	 * Function to check if the pass value is an Integer
+	 * @param value: Value to check
+	 * @return NO_ERR: No error / ERR_NULL: The value is null / ERR_FORMAT: Is not an integer
+	 */
 	public static int checkNumeric(String value) {
 
 		if (value == null) {
@@ -257,7 +297,11 @@ public class Main {
 		}
 		return NO_ERR;
 	}
-
+	/**
+	 * Function to check the correct format of the orientation
+	 * @param value: Value to check
+	 * @return NO_ERR: No error / ERR_SINTAXIS:Error writing the correct value
+	 */
 	public static int checkOrientation(String value) {
 		
 		if (value.equals("N") || value.equals("E") || value.equals("W") || value.equals("S") ) {
@@ -267,7 +311,11 @@ public class Main {
 		}
 		
 	}
-	
+	/**
+	 * Function to check if the user has choose a correct format initial position
+	 * @param checkStr: String of the values to check
+	 * @return NO_ERR: No error / ERR_SINTAXIS: Error writing the format of the tableau / ERR_BOUNDS: Error of the bounds of the tableau / ERR_COLISION: Error for choosing an occupied point
+	 */
 	public static int checkInitialPos(String[] checkStr) {
 		
 		if (checkStr.length != 3) {
@@ -289,28 +337,36 @@ public class Main {
 			return ERR_BOUNDS;
 		}
 		
-		if (checkColision(testPoint) != NO_ERR) {
+		if (checkCollision(testPoint) != NO_ERR) {
 			return ERR_COLISION;
 		}
 		
 		return NO_ERR;
 		
 	}
-	
+	/**
+	 * Function to check if the action is correct
+	 * @param checkPt: Point to check
+	 * @return NO_ERR: No error / ERR_BOUNDS: Error of the bounds of the tableau / ERR_COLISION: Error for choosing an occupied point
+	 */
 	private static int checkAction(Point checkPt) {
 		
 		if (checkBounds(checkPt) != NO_ERR) {
 			return ERR_BOUNDS;
 		}
 		
-		if (checkColision(checkPt) != NO_ERR) {
+		if (checkCollision(checkPt) != NO_ERR) {
 			return ERR_COLISION;
 		}
 		
 		return NO_ERR;
 		
 	}
-
+	/**
+	 * Function to check values of the movement
+	 * @param checkStr: String to check
+	 * @return NO_ERR: No error / ERR_SINTAXIS: Error writing the movement
+	 */
 	public static int checkCorrectValuesMovement(String[] checkStr) {
 		
 		int i=0;
@@ -325,16 +381,24 @@ public class Main {
 		
 		return NO_ERR;
 	}
-	
+	/**
+	 * Function to check the bounds of the tableau
+	 * @param checkPt: Point to check
+	 * @return NO_ERR: No error / ERR_BOUNDS: Error of the bounds of the tableau
+	 */
 	private static int checkBounds(Point checkPt) {
-		if (checkPt.getX() > sizeX || checkPt.getY() > sizeY ) {
+		if (checkPt.getX() >= sizeX || checkPt.getX() < 0 || checkPt.getY() >= sizeY || checkPt.getY() < 0 ) {
 			return ERR_BOUNDS;
 		}
 		
 		return NO_ERR;
 	}
-	
-	private static int checkColision(Point checkPt) {
+	/**
+	 * Function to check if there is collision
+	 * @param checkPt: Point to check
+	 * @return NO_ERR: No error / ERR_COLISION: Error for choosing an occupied point
+	 */
+	private static int checkCollision(Point checkPt) {
 		
 		int i =0;
 		
