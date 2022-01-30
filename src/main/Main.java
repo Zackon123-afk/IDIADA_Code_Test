@@ -68,8 +68,8 @@ public class Main {
 			valueCheck = checkingSizeTableau(checkStr);
 		}
 		
-		sizeX = Integer.parseInt(checkStr[0]);
-		sizeY = Integer.parseInt(checkStr[1]);
+		sizeX = Integer.parseInt(checkStr[0]) + 1;
+		sizeY = Integer.parseInt(checkStr[1]) + 1;
 		
 		//Starting the loop of robots
 		while(! keyboardResponse.equals("q")) {
@@ -172,14 +172,14 @@ public class Main {
 	public static void showMenu(int sizeX, int sizeY,int n_robots ,Robot initialRobot, int typeOfMenu) {
 		switch(typeOfMenu) {
 			case SIZE_MENU:
-				System.out.print("Size of the tableau: ");
+				System.out.print("Upper-right coordinates of the plateau: ");
 				break;
 			case INIT_POS_MENU:
-				System.out.println("Size of the tableau: ("+sizeX+","+sizeY+")");
+				System.out.println("Upper-right coordinates of the plateau:: ("+(sizeX-1)+","+(sizeY-1)+")");
 				System.out.print("Initial position of the robot n"+(n_robots+1)+": ");
 				break;
 			case MOVEMENT_MENU:
-				System.out.println("Size of the tableau: ("+sizeX+","+sizeY+")");
+				System.out.println("Upper-right coordinates of the plateau:: ("+(sizeX-1)+","+(sizeY-1)+")");
 				System.out.println("Initial position of the robot n"+(n_robots+1)+": "+initialRobot.getCoordinates().getX()+" "+
 						initialRobot.getCoordinates().getY()+" "+initialRobot.getOrientation());
 				System.out.print("Movement is going to do the robot: ");
